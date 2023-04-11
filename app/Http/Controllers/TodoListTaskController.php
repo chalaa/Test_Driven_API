@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\TodoList;
-use Illuminate\Http\Request;
+use App\Models\TodoListTask;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
 
-class TodoListController extends Controller
+class TodoListTaskController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +15,8 @@ class TodoListController extends Controller
     public function index()
     {
         //
-        $list=TodoList::all();
-        return response($list);
+        $task = TodoListTask::all();
+        return response($task);
     }
 
     /**
@@ -24,41 +25,34 @@ class TodoListController extends Controller
     public function store(Request $request)
     {
         //
-        $request->validate([
-            "name" => ["required"]
-        ]);
-       $list= TodoList::create($request->all());
-        return $list;
-    
+        $task = TodoListTask::create($request->all());
+        return $task;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(TodoList $todo_list)
+    public function show(string $id)
     {
         //
-        return response($todo_list);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TodoList $todo_list)
+    public function update(Request $request, TodoListTask $task)
     {
         //
-        $request->validate(["name"=>"required"]);
-        return $todo_list->update($request->all());
-
+        return $task->update($request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TodoList $todo_list)
+    public function destroy(TodoListTask $task)
     {
         //
-        $todo_list->delete();
+        $task->delete();
         return response("",Response::HTTP_NO_CONTENT);
     }
 }
