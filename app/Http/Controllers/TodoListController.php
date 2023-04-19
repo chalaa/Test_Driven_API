@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TodolistRequest;
 use App\Models\TodoList;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
 
 class TodoListController extends Controller
 {
@@ -13,23 +15,17 @@ class TodoListController extends Controller
      */
     public function index()
     {
-        //
-        $list=TodoList::all();
-        return response($list);
+        return auth()->user()->todo_lists;
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TodolistRequest $request)
     {
-        //
-        $request->validate([
-            "name" => ["required"]
-        ]);
-       $list= TodoList::create($request->all());
-        return $list;
-    
+       
+        return auth()->user()->todo_lists()->create($request->validated());
+       
     }
 
     /**
