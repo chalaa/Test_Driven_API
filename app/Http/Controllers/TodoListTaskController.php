@@ -12,21 +12,21 @@ class TodoListTaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(TodoList $todo_list)
     {
         //
-        $task = TodoListTask::all();
+        $task=$todo_list->tasks;
         return response($task);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, TodoList $todo_list)
     {
-        //
-        $task = TodoListTask::create($request->all());
-        return $task;
+        
+        return $todo_list->tasks()->create($request->all());
+    
     }
 
     /**

@@ -18,24 +18,30 @@ class TodoListTaskTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->task = TodoListTask::factory()->create();
+        $this->authUser();
         $this->todo_list = TodoList::factory()->create();
+        $this->task = TodoListTask::factory()->create(["todo_list_id" =>$this->todo_list->id]);
     }
+
+
     public function test_fetch_all_task_of_todo_list(): void
     {
-        
         $response = $this->getJson(route("todo-list.task.index",$this->todo_list->id))->assertOk()->json();
+        $this->assertEquals(1,count($response));
         $this->assertEquals($this->task->title,$response[0]["title"]);
     }
 
     public function test_store_task_for_todo_list(): void{
 
-        $list = TodoListTask::factory()->make();
+        $list = TodoListTask::factory()->make(["todo_list_id" =>$this->todo_list->id]);
         $response = $this->postJson(route("todo-list.task.store",$this->todo_list->id),["title"=>$list->title])
             ->assertCreated()
             ->json();
         $this->assertEquals($list->title,$response["title"]);
-        $this->assertDatabaseHas("todo_list_tasks",["title"=>$list->title]);
+        $this->assertDatabaseHas("todo_list_tasks",[
+            "title"=>$list->title,
+            "todo_list_id"=>$this->todo_list->id
+        ]);
 
     }
 
