@@ -1,9 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoListController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TodoListTaskController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\LableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +22,27 @@ use App\Http\Controllers\TodoListTaskController;
 //     return $request->user();
 // });
 
-Route::apiResource("todo-list",TodoListController::class);
-Route::apiResource("todo-list.task",TodoListTaskController::class)
+Route::middleware('auth:sanctum')->group(function(){
+        Route::apiResource("todo-list",TodoListController::class);
+        Route::apiResource("todo-list.task",TodoListTaskController::class)
         ->shallow();
+        Route::apiResource("lable",LableController::class);
+});
+
+
+Route::post("/register",RegisterController::class)->name("user.register");
+Route::post("/login",LoginController::class)->name("user.login");
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Route::get("todo-list",[TodoListController::class,"index"])->name("todo-list.index");
