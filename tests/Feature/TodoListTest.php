@@ -46,7 +46,7 @@ class TodoListTest extends TestCase
     public function test_store_new_todo_list(){
 
         $list = TodoList::factory()->make();
-        
+
         $response=$this->postJson(route("todo-list.store"),["name"=>"$list->name"])
                 ->assertCreated()
                 ->json();
@@ -71,7 +71,7 @@ class TodoListTest extends TestCase
 
         $this->deleteJson(route("todo-list.destroy",$this->list->id))->assertNoContent();
 
-        $this->assertDatabaseMissing("todo_lists",["name" => $this->list->name]);
+        $this->assertDatabaseMissing("todo_lists",["id" => $this->list->id]);
     }
 
     public function test_update_todo_list_(){

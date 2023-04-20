@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Lable;
 use Tests\TestCase;
 use App\Models\TodoList;
 use App\Models\TodoListTask;
@@ -33,14 +34,37 @@ class TodoListTaskTest extends TestCase
 
     public function test_store_task_for_todo_list(): void{
 
-        $list = TodoListTask::factory()->make(["todo_list_id" =>$this->todo_list->id]);
+        $list = TodoListTask::factory()->make();
+        $lable = Lable::factory()->create();
+
+        $response = $this->postJson(route("todo-list.task.store",$this->todo_list->id),
+        [
+            "title"=>$list->title,
+            "lable_id" =>$lable->id
+        ])->assertCreated()->json();
+
+        $this->assertEquals($list->title,$response["title"]);
+        $this->assertEquals($lable->id,$response["lable_id"]);
+
+        $this->assertDatabaseHas("todo_list_tasks",[
+            "title"=>$list->title,
+            "todo_list_id"=>$this->todo_list->id,
+            "lable_id" =>$lable->id
+        ]);
+
+    }
+
+    public function test_store_task_for_todo_list_without_label(): void{
+
+        $list = TodoListTask::factory()->make();
         $response = $this->postJson(route("todo-list.task.store",$this->todo_list->id),["title"=>$list->title])
             ->assertCreated()
             ->json();
         $this->assertEquals($list->title,$response["title"]);
         $this->assertDatabaseHas("todo_list_tasks",[
             "title"=>$list->title,
-            "todo_list_id"=>$this->todo_list->id
+            "todo_list_id"=>$this->todo_list->id,
+            "lable_id" => null,
         ]);
 
     }

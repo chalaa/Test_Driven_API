@@ -18,7 +18,9 @@ class TodoListTask extends Model
     protected $fillable = [
         "title",
         "todo_list_id",
-        "status" 
+        "status",    
+        "description",
+        "lable_id"
     ];
 
     Public function todo_list():BelongsTo

@@ -22,7 +22,6 @@ class TodoListFactory extends Factory
             "user_id" => function(){
                 return User::factory()->create()->id;
             },
-            "description" => $this->faker->paragraph
         ];
     }
 }

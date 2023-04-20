@@ -13,7 +13,6 @@ class TodoList extends Model
     protected $fillable =[
         "name",
         "user_id",
-        "description",
     ];
     //protected $guarded = false;
 

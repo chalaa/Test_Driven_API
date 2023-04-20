@@ -20,7 +20,7 @@ class TaskStatusTest extends TestCase
         $this->authUser();
         $task = TodoListTask::factory()->create();
 
-        $this->patchJson(route("task.update",$task->id),["status"=>TodoListTask::STARTED]);
+        $this->patchJson(route("task.update",$task->id),["status"=>TodoListTask::STARTED,"title"=>$task->title]);
 
         $this->assertDatabaseHas("todo_list_tasks",["id"=>$task->id , "status"=>TodoListTask::STARTED]);
     }

@@ -14,14 +14,12 @@ return new class extends Migration
     {
         Schema::create('todo_list_tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("todo_list_id")->constrained()->cascadeOnDelete();
+            $table->foreignId("lable_id")->nullable()->constrained();
             $table->string("title");
-            $table->unsignedBigInteger("todo_list_id");
             $table->string("status")->default(TodoListTask::NOT_STARTED);
+            $table->text("description")->nullable();
             $table->timestamps();
-            $table->foreign("todo_list_id")
-            ->references("id")
-            ->on("todo_lists")
-            ->onDelete("cascade");
         });
     }
 
