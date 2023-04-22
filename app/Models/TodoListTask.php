@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Lable;
+use App\Models\TodoList;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TodoListTask extends Model
 {
@@ -28,4 +31,8 @@ class TodoListTask extends Model
         return $this->belongsTo(TodoList::class);
     }
 
+    public function lable():BelongsTo
+    {
+        return $this->belongsTo(Lable::class);
+    }
 }

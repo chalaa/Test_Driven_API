@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Lable;
 use Tests\TestCase;
+use App\Models\Lable;
 use App\Models\TodoList;
 use App\Models\TodoListTask;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,10 +27,13 @@ class TodoListTaskTest extends TestCase
 
     public function test_fetch_all_task_of_todo_list(): void
     {
-        $response = $this->getJson(route("todo-list.task.index",$this->todo_list->id))->assertOk()->json();
+        
+        $response = $this->getJson(route("todo-list.task.index",$this->todo_list->id))->assertOk()->json("data");
         $this->assertEquals(1,count($response));
         $this->assertEquals($this->task->title,$response[0]["title"]);
     }
+
+
 
     public function test_store_task_for_todo_list(): void{
 
@@ -43,8 +46,8 @@ class TodoListTaskTest extends TestCase
             "lable_id" =>$lable->id
         ])->assertCreated()->json();
 
-        $this->assertEquals($list->title,$response["title"]);
-        $this->assertEquals($lable->id,$response["lable_id"]);
+        $this->assertEquals($list->title,$response['data']["title"]);
+        $this->assertEquals($lable->id,$response['data']["lable"]["id"]);
 
         $this->assertDatabaseHas("todo_list_tasks",[
             "title"=>$list->title,
@@ -54,13 +57,15 @@ class TodoListTaskTest extends TestCase
 
     }
 
+
+
     public function test_store_task_for_todo_list_without_label(): void{
 
         $list = TodoListTask::factory()->make();
         $response = $this->postJson(route("todo-list.task.store",$this->todo_list->id),["title"=>$list->title])
             ->assertCreated()
             ->json();
-        $this->assertEquals($list->title,$response["title"]);
+        $this->assertEquals($list->title,$response['data']["title"]);
         $this->assertDatabaseHas("todo_list_tasks",[
             "title"=>$list->title,
             "todo_list_id"=>$this->todo_list->id,
@@ -68,6 +73,8 @@ class TodoListTaskTest extends TestCase
         ]);
 
     }
+
+
 
     public function test_delete_task_for_todo_list() : void{
 
@@ -77,11 +84,12 @@ class TodoListTaskTest extends TestCase
         $this->assertDatabaseMissing("todo_list_tasks",["title"=>$this->task->title]);
     }
 
+
+
     public function test_update_task_for_todo_list() : void{
 
         $this->patchJson(route("task.update", $this->task->id),["title"=>"updated task"])
              ->assertOk();
-            
         $this->assertDatabaseHas("todo_list_tasks",["id"=>$this->task->id,"title"=>"updated task"]);
     }
 }

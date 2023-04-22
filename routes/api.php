@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LableController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TodoListTaskController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\LableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::apiResource("todo-list.task",TodoListTaskController::class)
         ->shallow();
         Route::apiResource("lable",LableController::class);
+        Route::get("service/connect/{name}",[ServiceController::class,"connect"])->name("service.connect");
+        Route::post("service/callback",[ServiceController::class,"callback"])->name("service.callback");
+        Route::post("service/{service}",[ServiceController::class,"store"])->name("service.store");
 });
 
 

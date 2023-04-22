@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\TodoList;
+use App\Models\TodoListTask;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TodoListTest extends TestCase
 {
@@ -26,11 +27,9 @@ class TodoListTest extends TestCase
 
     public function test_fetch_all_todo_list(): void
     {
-
         Todolist::factory()->create();
-        $response = $this->getJson(route("todo-list.index"));
-
-        $this->assertEquals(1, count($response->json()));
+        $response = $this->getJson(route("todo-list.index"))->json("data");
+        $this->assertEquals(1, count($response));
     }
 
     public function test_fetch_single_todo_list(){
@@ -38,8 +37,7 @@ class TodoListTest extends TestCase
         
         $response = $this->getJson(route("todo-list.show",$this->list->id))
                     ->assertOk()
-                    ->json();
-
+                    ->json("data");
         $this->assertEquals($response["name"],$this->list->name);
     }
 
@@ -47,9 +45,9 @@ class TodoListTest extends TestCase
 
         $list = TodoList::factory()->make();
 
-        $response=$this->postJson(route("todo-list.store"),["name"=>"$list->name"])
+        $response=$this->postJson(route("todo-list.store"),["name"=>$list->name])
                 ->assertCreated()
-                ->json();
+                ->json("data");
 
         $this->assertEquals("$list->name",$response["name"]);
         $this->assertDatabaseHas("todo_lists",["name"=>"$list->name"]);
@@ -77,7 +75,7 @@ class TodoListTest extends TestCase
     public function test_update_todo_list_(){
 
         $this->patchJson(route("todo-list.update" , $this->list->id),["name"=>"list is updated"])
-            ->assertOk();
+            ->assertOk()->json("data");
 
         $this->assertDatabaseHas("todo_lists",["id"=>$this->list->id, "name"=>"list is updated"]);
 

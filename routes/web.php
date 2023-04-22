@@ -1,5 +1,8 @@
 <?php
 
+use Google\Client;
+use App\Models\Service;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,27 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $service = Service::find(2)->get();
+    return $service[0]["token"];
+});
+
+
+Route::get("/drive", function(){
+    
+});
+
+Route::get("/google-drive/callback", function(Request $request, Client $client){
+   return request("code");
+//    $access_token = $client->fetchAccessTokenWithAuthCode($request->code);
+
+//         $service = Service::create([
+//             "user_id" => auth()->user()->id,
+//             "token" => json_encode(["access_token"=>$access_token]),
+//             "name" => "google-drive",
+//         ]);
+//         return $service;
+});
+
+Route::get("/upload", function(){
+    
 });

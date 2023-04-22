@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TodoListTaskRequest;
 use App\Models\TodoList;
 use App\Models\TodoListTask;
+use App\Http\Requests\TodoListTaskRequest;
+use App\Http\Resources\TodoListResource;
+use App\Http\Resources\TodoListTaskResource;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 
 class TodoListTaskController extends Controller
 {
@@ -17,7 +18,7 @@ class TodoListTaskController extends Controller
     {
         //
         $task=$todo_list->tasks;
-        return response($task);
+        return TodoListTaskResource::collection($task);
     }
 
     /**
@@ -26,8 +27,9 @@ class TodoListTaskController extends Controller
     public function store(TodoListTaskRequest $request, TodoList $todo_list)
     {
         
-        return $todo_list->tasks()->create($request->validated());
-    
+        $task = $todo_list->tasks()->create($request->validated());
+        return new TodoListTaskResource($task);
+        
     }
 
     /**
@@ -44,7 +46,9 @@ class TodoListTaskController extends Controller
     public function update(TodoListTaskRequest $request, TodoListTask $task)
     {
         //
-        return $task->update($request->validated());
+        $task->update($request->validated());
+        return new TodoListTaskResource($task);
+    
     }
 
     /**
